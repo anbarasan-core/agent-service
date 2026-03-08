@@ -58,6 +58,18 @@ public class GlobalExceptionHandler {
 				);
 		return new ResponseEntity<>(duplicateUserResponse,HttpStatus.CONFLICT);
 	}
+	
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException (ResourceNotFoundException resourceException){
+		ApiResponse<Void> resourceResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.NOT_FOUND.value(),
+				resourceException.getMessage(),
+				null
+				);
+		return new ResponseEntity<>(resourceResponse,HttpStatus.NOT_FOUND);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex){
 		ApiResponse<Void> genericExceptionResponse = new ApiResponse<>(
