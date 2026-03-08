@@ -1,0 +1,42 @@
+package com.alturion.agent.controller;
+
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alturion.agent.common.ApiResponse;
+import com.alturion.agent.dto.AgentRequestDto;
+import com.alturion.agent.dto.AgentResponseDto;
+import com.alturion.agent.service.AgentService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/agent")
+public class AgentController {
+	
+	private final AgentService agentService;
+	
+	public AgentController(AgentService agentService) {
+		this.agentService = agentService;
+	}
+	
+	@PostMapping("/create")
+	public ResponseEntity<ApiResponse<AgentResponseDto>> agentCreation(@Valid @RequestBody AgentRequestDto agentRequestDto) {
+		
+		AgentResponseDto agentResponse = agentService.createAgent(agentRequestDto);
+		ApiResponse<AgentResponseDto> agentApiResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.CREATED.value(),
+				"Agent Record Created Successfully",
+				agentResponse
+				);
+		return new ResponseEntity<ApiResponse<AgentResponseDto>>(agentApiResponse,HttpStatus.CREATED);
+	}
+
+}
