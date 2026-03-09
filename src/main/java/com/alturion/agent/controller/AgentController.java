@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +53,19 @@ public class AgentController {
 				agentResponse
 				);
 		return new ResponseEntity<ApiResponse<AgentResponseDto>>(agentApiResponse,HttpStatus.OK);
+	}
+	
+	@PatchMapping("/{agentId}/{licenseNumber}/deactivate")
+	public ResponseEntity<ApiResponse<Void>> deactivatingAgent(@PathVariable Long agentId,@PathVariable String licenseNumber) {
+		
+		agentService.deactivateAgent(agentId, licenseNumber);
+		ApiResponse<Void> agentApiResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.OK.value(),
+				"Agent Deactivated Successfully",
+				null
+				);
+		return new ResponseEntity<ApiResponse<Void>>(agentApiResponse,HttpStatus.OK);
 	}
 
 }

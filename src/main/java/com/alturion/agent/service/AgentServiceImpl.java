@@ -10,6 +10,7 @@ import com.alturion.agent.dto.AgentRequestDto;
 import com.alturion.agent.dto.AgentResponseDto;
 import com.alturion.agent.enums.AgentStatus;
 import com.alturion.agent.exception.DuplicateUserException;
+import com.alturion.agent.exception.InvalidAgentTransactionException;
 import com.alturion.agent.exception.ResourceNotFoundException;
 import com.alturion.agent.mapper.AgentInfoMapper;
 import com.alturion.agent.repository.AgentRepository;
@@ -60,6 +61,23 @@ public class AgentServiceImpl implements AgentService{
 												.orElseThrow(()->new ResourceNotFoundException("No Agent Details Found"));
 		AgentResponseDto agentResponseDto = agentInfoMapper.toResponseDto(agentDetails);
 		return agentResponseDto;
+	}
+
+	@Override
+	public void deactivateAgent(Long agentId, String licenseNumber) {
+		
+		logger.info("Executing AgentServiceImpl::deactivateAgent");
+		AgentInfo agentDetails = agentRepository.findByAgentIdAndLicenseNumber(agentId, licenseNumber)
+				.orElseThrow(()->new ResourceNotFoundException("No Agent Details Found"));
+		if(agentDetails.getAgentStatus() == AgentStatus.ACTIVE) {
+			agentDetails.setAgentStatus(AgentStatus.TERMINATED);
+			agentDetails.setUpdatedAt(LocalDateTime.now());
+		}
+		else {
+			throw new InvalidAgentTransactionException("Agent is NOT active. Unable to deactivate");
+		}
+		agentRepository.save(agentDetails);
+		logger.info("Agent Successfully Terminated");
 	}
 
 }

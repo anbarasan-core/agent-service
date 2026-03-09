@@ -7,5 +7,6 @@ public interface AgentService {
 	
 	public AgentResponseDto createAgent(AgentRequestDto agentRequestDto);
 	public AgentResponseDto fetchAgent(Long agentId,String licenseNumber);
+	public void deactivateAgent(Long agentId,String licenseNumber);
 
 }

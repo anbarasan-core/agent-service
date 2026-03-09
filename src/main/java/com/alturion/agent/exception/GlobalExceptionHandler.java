@@ -70,6 +70,17 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(resourceResponse,HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(InvalidAgentTransactionException.class)
+	public ResponseEntity<ApiResponse<Void>> handleAgentTransactionException (InvalidAgentTransactionException invalidAgentException){
+		ApiResponse<Void> agentApiResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.NOT_FOUND.value(),
+				invalidAgentException.getMessage(),
+				null
+				);
+		return new ResponseEntity<>(agentApiResponse,HttpStatus.NOT_FOUND);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex){
 		ApiResponse<Void> genericExceptionResponse = new ApiResponse<>(
