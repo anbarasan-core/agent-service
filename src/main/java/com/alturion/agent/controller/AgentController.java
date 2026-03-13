@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alturion.agent.common.ApiResponse;
+import com.alturion.agent.dto.AgentDashboardDto;
 import com.alturion.agent.dto.AgentRequestDto;
 import com.alturion.agent.dto.AgentResponseDto;
 import com.alturion.agent.service.AgentService;
@@ -66,6 +67,19 @@ public class AgentController {
 				null
 				);
 		return new ResponseEntity<ApiResponse<Void>>(agentApiResponse,HttpStatus.OK);
+	}
+	
+	@GetMapping("/{agentId}/{licenseNumber}/dashboard")
+	public ResponseEntity<ApiResponse<AgentDashboardDto>> agentDashboard(@PathVariable Long agentId,@PathVariable String licenseNumber) {
+		
+		AgentDashboardDto agentDashboardDto = agentService.aggregateAgentDashboard(agentId, licenseNumber);
+		ApiResponse<AgentDashboardDto> agentApiResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.OK.value(),
+				"Agent Dashboard Details Fetched Successfully",
+				agentDashboardDto
+				);
+		return new ResponseEntity<ApiResponse<AgentDashboardDto>>(agentApiResponse,HttpStatus.OK);
 	}
 
 }

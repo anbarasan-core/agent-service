@@ -81,6 +81,18 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(agentApiResponse,HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(DependencyServiceUnavailableException.class)
+	public ResponseEntity<ApiResponse<Void>> handleDependencyServiceUnavailableException(DependencyServiceUnavailableException dependencyServiceException) {
+		
+		ApiResponse<Void> dependencyServiceUnavailableResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.SERVICE_UNAVAILABLE.value(),
+				dependencyServiceException.getMessage(),
+				null
+				);
+		return new ResponseEntity<ApiResponse<Void>>(dependencyServiceUnavailableResponse,HttpStatus.SERVICE_UNAVAILABLE);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex){
 		ApiResponse<Void> genericExceptionResponse = new ApiResponse<>(
