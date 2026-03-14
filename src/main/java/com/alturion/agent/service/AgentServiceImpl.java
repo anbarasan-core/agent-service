@@ -13,8 +13,10 @@ import com.alturion.agent.client.PolicyInfoClient;
 import com.alturion.agent.client.PolicyOwnerClient;
 import com.alturion.agent.domain.AgentInfo;
 import com.alturion.agent.dto.AgentDashboardDto;
+import com.alturion.agent.dto.AgentPoliciesResponseDto;
 import com.alturion.agent.dto.AgentRequestDto;
 import com.alturion.agent.dto.AgentResponseDto;
+import com.alturion.agent.dto.PageResponseDto;
 import com.alturion.agent.dto.PolicyInfoSummaryDto;
 import com.alturion.agent.dto.PolicyOwnerSummaryDto;
 import com.alturion.agent.enums.AgentStatus;
@@ -135,6 +137,37 @@ public class AgentServiceImpl implements AgentService{
 				.count()); 
 		return dashboardDto;
 		}
+	}
+
+	@Override
+	public AgentPoliciesResponseDto getAllPoliciesByAgent(Long agentId, String licenseNumber,int page,int size) {
+		
+		logger.info("Executing AgentServiceImpl::getAllPoliciesByAgent");
+		AgentPoliciesResponseDto responseDto = new AgentPoliciesResponseDto();
+		AgentInfo agentDetails = agentRepository.findByAgentIdAndLicenseNumber(agentId, licenseNumber)
+				.orElseThrow(()->new ResourceNotFoundException("No Agent Details Found"));
+		responseDto.setAgentId(agentId);
+		responseDto.setLicenseNumber(licenseNumber);
+		responseDto.setAgentStatus(agentDetails.getAgentStatus());
+		
+		List<PolicyOwnerSummaryDto> ownerSummary = policyOwnerClient.getOwnerSummaryList(agentId);
+		List<Long> ownerIds = ownerSummary.stream()
+		.map(PolicyOwnerSummaryDto::getUserId)
+		.collect(Collectors.toList());
+		
+		if(ownerIds.isEmpty()) {
+			responseDto.setCurrentPage(page);
+			responseDto.setTotalPages(0);
+			responseDto.setPoliciesList(List.of());
+			return responseDto;
+		}
+		
+		PageResponseDto<PolicyInfoSummaryDto> allPolicyPages = policyInfoClient.getPoliciesByPages(ownerIds, page, size);
+		responseDto.setCurrentPage(allPolicyPages.getCurrentPage());
+		responseDto.setTotalPages(allPolicyPages.getTotalPage());
+		responseDto.setPoliciesList(allPolicyPages.getContent());
+		responseDto.setTotalPolicies(allPolicyPages.getTotalElements());
+		return responseDto;
 	}
 
 }

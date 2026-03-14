@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alturion.agent.common.ApiResponse;
 import com.alturion.agent.dto.AgentDashboardDto;
+import com.alturion.agent.dto.AgentPoliciesResponseDto;
 import com.alturion.agent.dto.AgentRequestDto;
 import com.alturion.agent.dto.AgentResponseDto;
 import com.alturion.agent.service.AgentService;
@@ -80,6 +82,21 @@ public class AgentController {
 				agentDashboardDto
 				);
 		return new ResponseEntity<ApiResponse<AgentDashboardDto>>(agentApiResponse,HttpStatus.OK);
+	}
+	
+	@GetMapping("/{agentId}/{licenseNumber}/policies")
+	public ResponseEntity<ApiResponse<AgentPoliciesResponseDto>> retreiveAgentPolicies(@PathVariable Long agentId, 
+																					   @PathVariable String licenseNumber,
+																					   @RequestParam int page,
+																					   @RequestParam int size) {
+		AgentPoliciesResponseDto policiesResponseDto = agentService.getAllPoliciesByAgent(agentId, licenseNumber, page, size);
+		ApiResponse<AgentPoliciesResponseDto> agentApiResponse = new ApiResponse<>(
+				LocalDateTime.now(),
+				HttpStatus.OK.value(),
+				"Agent Policies Details Fetched Successfully",
+				policiesResponseDto
+				);
+		return new ResponseEntity<ApiResponse<AgentPoliciesResponseDto>>(agentApiResponse,HttpStatus.OK);
 	}
 
 }
