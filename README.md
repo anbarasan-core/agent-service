@@ -1,3 +1,7 @@
+Agent Service:
+
+Description:
+
 The Agent Service is a standalone microservice responsible for managing insurance agent information and providing agent-centric operations within Alturion Policy Systems. It exposes REST APIs for agent creation, retrieval of agent details, and aggregation of policy data associated with agents. The service follows microservice architecture principles with standardized API responses, global exception handling, and a clear separation between controller, service, repository, and integration layers.
 
 The service collaborates with:
