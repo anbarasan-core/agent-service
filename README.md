@@ -31,9 +31,13 @@ config       → application configurations
 API Endpoints:
 
 POST   - /create
+
 GET    - /{agentId}/{licenseNumber}
+
 PATCH  - /{agentId}/{licenseNumber}/deactivate 
+
 GET    - /{agentId}/{licenseNumber}/dashboard
+
 GET    - /{agentId}/{licenseNumber}/policies
 
 These endpoints support agent creation, agent information retrieval, dashboard aggregation, and paginated retrieval of policy details associated with the agent.
