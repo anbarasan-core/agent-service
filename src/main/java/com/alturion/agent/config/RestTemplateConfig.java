@@ -8,8 +8,10 @@ import org.springframework.web.client.RestTemplate;
 public class RestTemplateConfig {
 	
 	@Bean
-	RestTemplate restTemplate() {
-		return new RestTemplate();
+    RestTemplate restTemplate(JwtInterceptor jwtInterceptor) {
+    	RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getInterceptors().add(jwtInterceptor);
+		return restTemplate;
 	}
 
 }

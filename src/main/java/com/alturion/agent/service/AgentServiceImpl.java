@@ -30,7 +30,7 @@ import com.alturion.agent.repository.AgentRepository;
 @Service
 public class AgentServiceImpl implements AgentService{
 	
-	Logger logger = Logger.getLogger(AgentServiceImpl.class);
+	private static Logger logger = Logger.getLogger(AgentServiceImpl.class);
 	
 	private final AgentRepository agentRepository;
 	private final AgentInfoMapper agentInfoMapper;
